@@ -52,7 +52,7 @@ df = pd.DataFrame.from_dict(data)[['year','basin','storm','time','wind','pressur
 
 df = df.sort_values(['year', 'basin', 'storm', 'time'])
 
-print(df.head(5))
+
 
 df['n_images'] = 1
 
@@ -72,7 +72,6 @@ per_storm.columns = ['year', 'storm', 'basin', 'max_speed', 'min_pressure', 'sta
 
 per_storm = per_storm.sort_values(['year', 'basin', 'start_time'])
 
-print(per_storm.head(5))
 
 with open('per_storm.pkl', 'wb') as f:
     pkl.dump(file=f, obj=per_storm, protocol=-1)
@@ -88,7 +87,20 @@ per_year = per_year.reset_index(drop=True)
 per_year.columns = ['year', 'basin', 'max_speed', 'min_pressure', 'start_time', 'end_time', 'n_images']
 per_year = per_year.sort_values(['year', 'basin', 'start_time'])
 
-print(per_year.head(50))
 
 with open('per_year.pkl', 'wb') as f:
     pkl.dump(file=f, obj=per_year, protocol=-1)
+
+
+def to_md(df, file):
+    if 'file' in df:
+        del df['file']
+    cols = df.columns
+    df2 = pd.DataFrame([['---', ] * len(cols)], columns=cols)
+    df3 = pd.concat([df2, df])
+    # Save as markdown
+    df3.to_csv(file, sep="|", index=False)
+
+    # to_md(df.head(10),'all.md')
+    # to_md(per_year.head(10),'per_year.md')
+    # to_md(per_storm.head(10),'per_storm.md')
