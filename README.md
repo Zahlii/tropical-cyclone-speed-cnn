@@ -8,8 +8,10 @@ Data Source: https://www.nrlmry.navy.mil/TC.html
 
 ## Sample Data 
 
-<img src="https://www.nrlmry.navy.mil/tcdat/tc17/ATL/15L.MARIA/ir/geo/1km/20170924.1815.goes13.x.ir1km.15LMARIA.90kts-943mb-291N-730W.100pc.jpg" style="width:250px;" />
-<img src="https://www.nrlmry.navy.mil/tcdat/tc17/ATL/15L.MARIA/vapor/geo/1km/20170924.1815.goes13.x.wv1km.15LMARIA.90kts-943mb-291N-730W.100pc.jpg" style="width:250px;" />
+![](https://www.nrlmry.navy.mil/tcdat/tc17/ATL/15L.MARIA/ir/geo/1km/20170924.1815.goes13.x.ir1km.15LMARIA.90kts-943mb-291N-730W.100pc.jpg | width=200)
+
+![](https://www.nrlmry.navy.mil/tcdat/tc17/ATL/15L.MARIA/vapor/geo/1km/20170924.1815.goes13.x.wv1km.15LMARIA.90kts-943mb-291N-730W.100pc.jpg | width=200)
+
 
 Hurricane Maria, 90kts, 2017-09-24 18:15 UTC
 
