@@ -1,4 +1,5 @@
 import _pickle as pkl
+import json
 import os
 from datetime import datetime
 from glob import glob
@@ -76,6 +77,42 @@ per_storm = per_storm.sort_values(['year', 'basin', 'start_time'])
 with open('per_storm.pkl', 'wb') as f:
     pkl.dump(file=f, obj=per_storm, protocol=-1)
 
+data_dict = {}
+date_handler = lambda obj: (
+    obj.isoformat()
+    if isinstance(obj, (datetime, datetime.date))
+    else None
+)
+
+for _, s in per_storm.iterrows():
+    n = s['storm']
+    y = s['year']
+    b = s['basin']
+
+    k = y + ' - ' + b + ' - ' + n
+
+    sub_df = df[(df['storm'] == n) & (df['year'] == y)]
+    sub_df = sub_df.sort_values('time')
+
+    data = []
+    for _, r in sub_df.iterrows():
+        data.append([r['time'], r['wind'], r['pressure']])
+
+    data_dict[k] = {
+        'name': n,
+        'year': y,
+        'basin': b,
+        'min_pressure': s['min_pressure'],
+        'max_speed': s['max_speed'],
+        'start_time': s['start_time'],
+        'end_time': s['end_time'],
+        'data': data
+    }
+
+with open('storms.json', 'w') as f:
+    json.dump(fp=f, obj=data_dict, default=date_handler)
+
+
 per_year = df.groupby(['year', 'basin'], as_index=False).agg({
     'wind': max,
     'pressure': min,
@@ -101,6 +138,6 @@ def to_md(df, file):
     # Save as markdown
     df3.to_csv(file, sep="|", index=False)
 
-    # to_md(df.head(10),'all.md')
-    # to_md(per_year.head(10),'per_year.md')
-    # to_md(per_storm.head(10),'per_storm.md')
+# to_md(df.head(10),'all.md')
+# to_md(per_year.head(10),'per_year.md')
+# to_md(per_storm.head(10),'per_storm.md')
