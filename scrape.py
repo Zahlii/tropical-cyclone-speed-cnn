@@ -7,7 +7,7 @@ import ssl
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
-data_dir = os.path.abspath('D:\/Dokumente/NOAA/')
+data_dir = os.path.abspath('./NOAA/')
 
 
 
@@ -112,18 +112,19 @@ def fetch_season(year):
     td = res.find_all('td')
     ltd = len(td)
 
-    with ThreadPoolExecutor(max_workers=16) as tpe:
+    with ThreadPoolExecutor(max_workers=32) as tpe:
         for _,l in enumerate(td):
             for a in l.find_all('a'):
                 print('\tStarting Storm',_,'/',ltd)
                 h = a['href']
                 p = urlparse.urlparse(h)
                 p = urlparse.parse_qs(p.query)
-
+                if 'BASIN' not in p:
+                    continue
                 tpe.submit(fetch_storm,str(year),p['BASIN'][0],p['STORM_NAME'][0])
 
 
-for i in range(2006,2018,1):
+for i in range(2014,2018,1):
     fetch_season(i)
 
 print('Done')
