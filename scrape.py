@@ -1,13 +1,14 @@
 import os
-import urllib.request
-from bs4 import BeautifulSoup
+import ssl
 import time
 import urllib.parse as urlparse
-import ssl
+import urllib.request
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
-data_dir = os.path.abspath('./NOAA/')
+from bs4 import BeautifulSoup
+
+data_dir = os.path.abspath('D:\/Dokumente/NOAA/')
 
 
 
@@ -112,7 +113,7 @@ def fetch_season(year):
     td = res.find_all('td')
     ltd = len(td)
 
-    with ThreadPoolExecutor(max_workers=32) as tpe:
+    with ThreadPoolExecutor(max_workers=16) as tpe:
         for _,l in enumerate(td):
             for a in l.find_all('a'):
                 print('\tStarting Storm',_,'/',ltd)
@@ -124,7 +125,7 @@ def fetch_season(year):
                 tpe.submit(fetch_storm,str(year),p['BASIN'][0],p['STORM_NAME'][0])
 
 
-for i in range(2014,2018,1):
+for i in range(2006, 2014, 1):
     fetch_season(i)
 
 print('Done')
