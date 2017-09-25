@@ -18,7 +18,7 @@ def r(file):
     return img / 255.0
 
 
-batch_size = 64
+batch_size = 32
 
 
 def gen_train():
@@ -52,13 +52,11 @@ def base_nn():
     i = MaxPooling2D()(i)
     i = Conv2D(64, (3, 3), activation='relu')(i)
     i = MaxPooling2D()(i)
-    i = Dropout(0.1)(i)
     i = Conv2D(128, (3, 3), activation='relu')(i)
     i = MaxPooling2D()(i)
     i = Conv2D(128, (3, 3), activation='relu')(i)
     i = MaxPooling2D()(i)
     i = Conv2D(256, (3, 3), activation='relu')(i)
-    i = MaxPooling2D()(i)
     i = Dropout(0.5)(i)
     i = Flatten()(i)
     return x, i
@@ -68,7 +66,7 @@ i_ir, m_ir = base_nn()
 i_wv, m_wv = base_nn()
 
 m_con = keras.layers.concatenate([m_ir, m_wv])
-m_con = Dense(128)(m_con)
+m_con = Dense(256)(m_con)
 m_con = Dense(1)(m_con)
 
 m = Model(inputs=[i_ir, i_wv], outputs=[m_con])
@@ -80,7 +78,7 @@ m.compile(loss=keras.losses.mean_squared_error,
           metrics=['mean_squared_error'])
 
 cb = [
-    keras.callbacks.EarlyStopping(min_delta=0.5, patience=3),
-    keras.callbacks.ModelCheckpoint(filepath='./data/weights.{epoch:02d}-{val_loss:.2f}.hdf5'),
+    keras.callbacks.EarlyStopping(min_delta=0.5, patience=3, monitor='mean_squared_error'),
+    keras.callbacks.ModelCheckpoint(filepath='./data/weights.{epoch:02d}-{mean_squared_error:.2f}.hdf5'),
 ]
-m.fit_generator(gen_train(), steps_per_epoch=100, epochs=10, callbacks=cb)
+m.fit_generator(gen_train(), steps_per_epoch=100, epochs=100, callbacks=cb)
