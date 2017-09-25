@@ -4,3 +4,4 @@ keras
 pandas
 beautifulsoup4
 tqdm
+opencv-python

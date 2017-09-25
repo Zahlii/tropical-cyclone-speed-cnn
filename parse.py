@@ -63,12 +63,23 @@ df = pd.DataFrame.from_dict(data)[['year','basin','storm','time','wind','pressur
 
 df = df.sort_values(['year', 'basin', 'storm', 'time'])
 
+df = df.groupby(['year', 'basin', 'storm', 'time', 'wind', 'pressure']).agg({
+    'file': ['first', 'last', 'count']
+})
 
+df = df.reset_index(drop=False)
+
+df.columns = ['year', 'basin', 'storm', 'time', 'wind', 'pressure', 'file_ir', 'file_wv', 'file_cnt']
+
+df = df[df['file_cnt'] >= 2]
+
+print(len(df))
 
 df['n_images'] = 1
 
-with open('all_obs.pkl', 'wb') as f:
+with open('./data/all_obs.pkl', 'wb') as f:
     pkl.dump(file=f, obj=df, protocol=-1)
+
 
 print('Saved all obs')
 
@@ -173,12 +184,12 @@ per_storm['category'] = cat
 
 print(per_storm.head(15))
 
-with open('per_storm.pkl', 'wb') as f:
+with open('./data/per_storm.pkl', 'wb') as f:
     pkl.dump(file=f, obj=per_storm, protocol=-1)
 
 print('Saved per storm')
 
-with open('storms.json', 'w') as f:
+with open('./data/storms.json', 'w') as f:
     json.dump(fp=f, obj=data_dict, default=date_handler)
 
 print('Saved JSON')
@@ -209,7 +220,7 @@ per_year = per_year.sort_values(['year', 'basin', 'start_time'])
 
 print(per_year.head(15))
 
-with open('per_year.pkl', 'wb') as f:
+with open('./data/per_year.pkl', 'wb') as f:
     pkl.dump(file=f, obj=per_year, protocol=-1)
 
 print('Saved per year')
@@ -226,6 +237,6 @@ def to_md(df, file):
     df3.to_csv(file, sep="|", index=False, float_format='%.1f')
 
 
-to_md(df.head(10), 'all.md')
-to_md(per_year.head(10), 'per_year.md')
-to_md(per_storm.head(10), 'per_storm.md')
+to_md(df.head(10), './data/all.md')
+to_md(per_year.head(10), './data/per_year.md')
+to_md(per_storm.head(10), './data/per_storm.md')
