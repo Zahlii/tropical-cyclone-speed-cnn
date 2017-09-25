@@ -41,7 +41,7 @@ for f in tqdm(files, total=len(files)):
         if wind is None:
             continue
 
-        timestamp = datetime.strptime(date + ' ' + time, '%Y%m%d %H%S')
+        timestamp = datetime.strptime(date + ' ' + time, '%Y%m%d %H%M')
 
         data['storm'].append(name)
         data['time'].append(timestamp)
